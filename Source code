@@ -1,0 +1,231 @@
+#include <iostream>
+
+#include <string>
+
+#include <fstream>
+
+#include <limits> 
+
+using namespace std;
+
+struct Student {
+
+ int PRN;
+
+ string name;
+
+ string department;
+
+ int year;
+
+};
+
+void addStudent(Student& student) {
+
+ cout << "Enter PRN: ";
+
+ while (!(cin >> student.PRN)) {
+
+ cout << "Invalid input. Please enter a valid PRN: ";
+
+ cin.clear(); // Clear the error flag
+
+ cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 
+
+Discard invalid input}
+
+ 
+
+ cout << "Enter name: ";
+
+ cin.ignore(); // Ignore the newline left in the input buffer
+
+ getline(cin, student.name);
+
+ 
+
+ cout << "Enter department: ";
+
+ getline(cin, student.department); // Read department input
+
+ 
+
+ cout << "Enter year: ";
+
+ while (!(cin >> student.year)) {
+
+ cout << "Invalid input. Please enter a valid year: ";
+
+ cin.clear(); // Clear the error flag
+
+ cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 
+
+Discard invalid input
+
+ }
+
+}
+
+void displayStudent(const Student& student) {
+
+ cout << "PRN: " << student.PRN << endl;
+
+ cout << "Name: " << student.name << endl;
+
+ cout << "Department: " << student.department << endl;
+
+ cout << "Year: " << student.year << endl;
+
+}void saveStudentsToFile(const Student students[], int 
+
+numStudents) {
+
+ ofstream file("students.txt");
+
+ if (file.is_open()) {
+
+ for (int i = 0; i < numStudents; i++) {
+
+ file << students[i].PRN << endl;
+
+ file << students[i].name << endl;
+
+ file << students[i].department << endl;
+
+ file << students[i].year << endl;
+
+ }
+
+ file.close();
+
+ cout << "Student data saved to file." << endl;
+
+ } else 
+
+ cout<<"Student data saved to file"<<endl;
+
+}
+
+void loadStudentsFromFile(Student students[], int& 
+
+numStudents) {
+
+ ifstream file("students.txt");
+
+ if (file.is_open()) {
+
+ numStudents = 0;
+
+ while (file >> students[numStudents].PRN) {
+
+ file.ignore(); // Ignore the newline after PRNgetline(file, students[numStudents].name);
+
+ getline(file, students[numStudents].department);
+
+ file >> students[numStudents].year;
+
+ if (file.fail()) break; // Stop if reading year fails
+
+ numStudents++;
+
+ }
+
+ file.close();
+
+ cout << "Student data loaded from file." << endl;
+
+ } 
+
+}
+
+int main() {
+
+ const int MAX_STUDENTS = 100;
+
+ Student students[MAX_STUDENTS];
+
+ int numStudents = 0;
+
+ loadStudentsFromFile(students, numStudents);
+
+ int choice;
+
+ do {
+
+ cout << "\nStudent Database Management System\n";
+
+ cout << "1. Add new student\n";
+
+ cout << "2. Display all students\n";
+
+ cout << "3. Save students to file\n";cout << "4. Exit\n";
+
+ cout << "Enter your choice: ";
+
+ 
+
+ while (!(cin >> choice)) {
+
+ cout << "Invalid input. Please enter a valid choice: ";
+
+ cin.clear(); // Clear the error flag
+
+ cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 
+
+Discard invalid input
+
+ }
+
+ switch (choice) {
+
+ case 1:
+
+ if (numStudents < MAX_STUDENTS) {
+
+ addStudent(students[numStudents]);
+
+ numStudents++;
+
+ } else {
+
+ cout << "Maximum number of students reached."
+
+<< endl;
+
+ }
+
+ break;
+
+ case 2:
+
+ for (int i = 0; i < numStudents; i++) {
+
+ displayStudent(students[i]);
+
+ cout << endl;}
+
+ break;
+
+ case 3:
+
+ saveStudentsToFile(students, numStudents);
+
+ break;
+
+ case 4:
+
+ cout << "Exiting program." << endl;
+
+ break;
+
+ default:
+
+ cout << "Invalid choice." << endl;
+
+ }
+
+ } while (choice != 4);
+
+ return 0;
+
+}
